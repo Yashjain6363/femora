@@ -4,10 +4,12 @@ import { registerSchema, loginSchema } from '../validations/auth.validation';
 import type { AuthRequest } from '../middleware/auth';
 import { env } from '../config/env';
 
+const isProduction = env.NODE_ENV === 'production';
+
 const COOKIE_OPTIONS = {
   httpOnly: true,
-  secure: env.NODE_ENV === 'production',
-  sameSite: 'strict' as const,
+  secure: isProduction,
+  sameSite: (isProduction ? 'none' : 'strict') as 'none' | 'strict',
   path: '/',
 };
 

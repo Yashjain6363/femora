@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Plus, Trash2, Pencil, BookHeart, Activity, Moon, Heart, Zap, Droplets } from 'lucide-react';
+import { Plus, Trash2, Pencil, BookHeart, Activity, Moon, Droplets } from 'lucide-react';
 import { RadarChart, PolarGrid, PolarAngleAxis, Radar, ResponsiveContainer, Tooltip } from 'recharts';
 import { symptomApi, wellnessApi } from '../api/services';
 import type { SymptomEntry, WellnessEntry, SymptomType } from '../types';
@@ -238,7 +238,10 @@ export const HealthJournalPage: React.FC = () => {
                     <PolarGrid stroke="var(--color-border-light)" />
                     <PolarAngleAxis dataKey="subject" tick={{ fontSize: 11, fill: 'var(--color-text-secondary)' }} />
                     <Radar name="Severity" dataKey="value" stroke="var(--color-accent)" fill="var(--color-primary)" fillOpacity={0.3} />
-                    <Tooltip formatter={(v: number) => [v.toFixed(1), 'Avg Severity']} contentStyle={{ borderRadius: 8, fontSize: 12 }} />
+                    <Tooltip formatter={(v) => {
+                      if (v === undefined || v === null) return ['', 'Avg Severity'];
+                      return [(v as number).toFixed(1), 'Avg Severity'];
+                    }} contentStyle={{ borderRadius: 8, fontSize: 12 }} />
                   </RadarChart>
                 </ResponsiveContainer>
               </div>

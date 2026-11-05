@@ -1,24 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Calendar, Droplets, Activity, Heart, Moon, Zap,
-  CalendarCheck, UtensilsCrossed, BookHeart, TrendingUp,
-  AlertCircle, Plus, ArrowRight, Sparkles
+  Calendar, Droplets, Activity, Heart, Moon,
+  CalendarCheck, UtensilsCrossed, TrendingUp,
+  AlertCircle, Plus, ArrowRight
 } from 'lucide-react';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { dashboardApi } from '../api/services';
 import type { DashboardSummary } from '../types';
 import { useAuth } from '../context/AuthContext';
 import { EmptyState, Spinner, Badge } from '../components/ui';
 import { AppLayout } from '../components/layout/AppLayout';
 
-const FLOW_LABELS: Record<string, string> = {
-  SPOTTING: 'Spotting', LIGHT: 'Light', MEDIUM: 'Medium', HEAVY: 'Heavy', VERY_HEAVY: 'Very Heavy',
-};
-
-const FLOW_COLORS: Record<string, string> = {
-  SPOTTING: '#FCE7F0', LIGHT: '#F4B8D4', MEDIUM: '#EFA5C4', HEAVY: '#D96F9E', VERY_HEAVY: '#C85D8E',
-};
 
 const MOOD_EMOJI: Record<number, string> = { 1: '😢', 2: '😕', 3: '😐', 4: '🙂', 5: '😊' };
 const ENERGY_EMOJI: Record<number, string> = { 1: '🪫', 2: '😴', 3: '😐', 4: '⚡', 5: '🔥' };
@@ -27,9 +20,6 @@ const formatDate = (iso: string) => new Date(iso).toLocaleDateString('en-US', {
   month: 'short', day: 'numeric',
 });
 
-const formatDateTime = (iso: string) => new Date(iso).toLocaleString('en-US', {
-  month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
-});
 
 const daysUntil = (iso: string) => {
   const diff = new Date(iso).getTime() - Date.now();
@@ -224,8 +214,11 @@ export const DashboardPage: React.FC = () => {
                   />
                   <YAxis domain={[0, 5]} hide />
                   <Tooltip
-                    formatter={(v: number, n: string) => [v, n === 'mood' ? 'Mood' : 'Energy']}
-                    labelFormatter={(l) => formatDate(l)}
+                    formatter={(v, n) => {
+                      if (v === undefined || v === null) return ['', String(n)];
+                      return [v as number, String(n) === 'mood' ? 'Mood' : 'Energy'];
+                    }}
+                    labelFormatter={(l) => formatDate(String(l))}
                     contentStyle={{ borderRadius: 8, border: '1px solid var(--color-border-light)', fontSize: 12 }}
                   />
                   <Line type="monotone" dataKey="mood" stroke="#EFA5C4" strokeWidth={2} dot={{ r: 3, fill: '#EFA5C4' }} activeDot={{ r: 5 }} name="mood" />

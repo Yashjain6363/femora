@@ -36,5 +36,6 @@ Thumbs.db
 *.sln
 *.sw?
 
-# Prisma
-prisma/migrations/
+# Prisma — commit migration files, ignore local dev database
+prisma/dev.db
+prisma/dev.db-journal

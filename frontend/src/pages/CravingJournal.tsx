@@ -173,7 +173,10 @@ export const CravingJournalPage: React.FC = () => {
                 <YAxis hide />
                 <Tooltip
                   contentStyle={{ borderRadius: 8, border: '1px solid var(--color-border-light)', fontSize: 12 }}
-                  formatter={(v: number) => [v, 'Times logged']}
+                  formatter={(v) => {
+                    if (v === undefined || v === null) return ['', 'Times logged'];
+                    return [v as number, 'Times logged'];
+                  }}
                 />
                 <Bar dataKey="count" fill="var(--color-primary)" radius={[4, 4, 0, 0]} />
               </BarChart>
